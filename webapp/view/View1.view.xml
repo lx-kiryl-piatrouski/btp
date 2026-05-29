@@ -1,0 +1,37 @@
+<mvc:View controllerName="project2.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+    <Table
+            id="serviceGroupsTable"
+            inset="false"
+            items="{/ServiceGroups}">
+
+            <headerToolbar>
+                <Toolbar>
+                    <Title text="Service Groups" />
+                </Toolbar>
+            </headerToolbar>
+
+            <columns>
+                <Column>
+                    <Text text="Group ID" />
+                </Column>
+
+                <Column>
+                    <Text text="Description" />
+                </Column>
+            </columns>
+
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <Text text="{GroupId}" />
+                        <Text text="{Description}" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+
+        </Table>
+    </Page>
+</mvc:View>
