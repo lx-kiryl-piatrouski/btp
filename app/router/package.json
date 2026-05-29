@@ -1,0 +1,10 @@
+{
+  "name": "project2-router",
+  "version": "0.0.1",
+  "dependencies": {
+    "@sap/approuter": "^11.0.0" 
+  },
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  }
+}
