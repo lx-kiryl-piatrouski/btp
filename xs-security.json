@@ -1,7 +1,25 @@
 {
-  "xsappname": "project2",
   "tenant-mode": "shared",
-  "description": "Security profile of called application",
-  "scopes": [],
-  "role-templates": []
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.FioriUser",
+      "description": "General Access to Project 2 Fiori App"
+    },
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "FioriUserRole",
+      "description": "General Access Role for Project 2",
+      "scope-references": ["$XSAPPNAME.FioriUser"],
+      "attribute-references": []
+    }
+  ]
 }

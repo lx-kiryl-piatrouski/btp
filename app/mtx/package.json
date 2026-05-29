@@ -1,0 +1,22 @@
+{
+  "name": "project2-mtx",
+  "version": "1.0.0",
+  "description": "CAP MTX Sidecar",
+  "dependencies": {
+    "@sap/cds": "^8",
+    "@sap/cds-mtxs": "^2",
+    "@cap-js/hana": "^1",
+    "@sap/xssec": "^4",
+    "passport": "^0.7.0",
+    "express": "^4"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cds": {
+    "profile": "mtx-sidecar",
+    "requires": {
+      "multitenancy": true
+    }
+  }
+}
