@@ -18,14 +18,14 @@ modules:
     parameters:
       service-key:
         name: project2-repo-host-key
-  - name: project2-uaa
-    parameters:
-      service-key:
-        name: project2-uaa-key
   - name: project2-html5-runtime
     parameters:
       service-key:
         name: project2-html5-runtime-key
+  - name: project2-uaa 
+    parameters:
+      service-key:
+        name: project2-uaa-key
   parameters:
     content:
       subaccount:
@@ -37,17 +37,17 @@ modules:
             ServiceKeyName: project2-html5-runtime-key
             URL: https://html5-apps-repo-rt.${default-domain}/applications/cdm/project2
       instance:
+        existing_destinations_policy: update
         destinations:
-        - Name: project2_html_repo_host
-          ServiceInstanceName: project2-html5-service
+        - Name: project2_html5_runtime
+          ServiceInstanceName: project2-html5-service 
           ServiceKeyName: project2-repo-host-key
           sap.cloud.service: project2
-        - Authentication: OAuth2UserTokenExchange
+        - Authentication: OAuth2UserTokenExchange 
           Name: project2_uaa
-          ServiceInstanceName: project2-xsuaa-service
+          ServiceInstanceName: project2-xsuaa-service 
           ServiceKeyName: project2-uaa-key
           sap.cloud.service: project2
-        existing_destinations_policy: update
   build-parameters:
     no-source: true
 
@@ -84,18 +84,22 @@ modules:
     keep-existing-routes: true
     disk-quota: 512M
     memory: 512M
-    routes: 
-      - route: '*-project2-mycompany.${default-domain}' 
   properties:
-    TENANT_HOST_PATTERN: "^(.*)-project2-mycompany.${default-domain}" 
+    TENANT_HOST_PATTERN: "^(.*)-project2-mycompany.${default-domain}"
+    CORS:
+      - uriPattern: .*
+        allowedOrigin:
+          - host: '*-project2-mycompany.${default-domain}'
+            protocol: 'https'
   requires:
   - name: project2-uaa
   - name: project2-html5-runtime
   - name: project2-destination-service
-  provides: 
+  provides:
   - name: app-api
     properties:
       app-protocol: ${protocol}
+      app-uri: project2-mycompany.${default-domain}
       redirect-uris: ${protocol}://*-project2-mycompany.${default-domain}/**
 
 - name: project2-mtx
@@ -113,6 +117,7 @@ modules:
   - name: project2-db
   - name: project2-html5-runtime
   - name: project2-destination-service
+  - name: project2-saas-registry  
   - name: app-api
     properties:
       SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-project2-mycompany.${default-domain}
@@ -126,15 +131,15 @@ resources:
     service: saas-registry
     service-plan: application
     config:
-      xsappname: project2-${org}-${space} 
-      appName: project2-${org}-${space}   
+      xsappname: project2-${org}-${space}
+      appName: project2-${org}-${space}
       displayName: "My Multitenant Fiori App"
       description: "SaaS Application"
       category: "Custom Apps"
       appUrls:
         getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
         onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
-        onSubscriptionAsync: false 
+        onSubscriptionAsync: false
         onUnSubscriptionAsync: false
         onUpdateDependenciesAsync: false
 
@@ -146,18 +151,20 @@ resources:
 
 - name: project2-destination-service
   type: org.cloudfoundry.managed-service
+  requires:
+    - name: project2-uaa 
   parameters:
     config:
       HTML5Runtime_enabled: true
       init_data:
         instance:
+          existing_destinations_policy: update
           destinations:
           - Authentication: NoAuthentication
             Name: ui5
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
-          existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: project2-destination-service
@@ -168,12 +175,12 @@ resources:
   requires:
     - name: app-api
   parameters:
-    path: ./xs-security.json 
+    path: ./xs-security.json
     service: xsuaa
     service-name: project2-xsuaa-service
     service-plan: broker
     config:
-      xsappname: project2-${org}-${space} 
+      xsappname: project2-${org}-${space}
       tenant-mode: shared
       oauth2-configuration:
         redirect-uris:
@@ -188,6 +195,8 @@ resources:
 
 - name: project2-html5-runtime
   type: org.cloudfoundry.managed-service
+  requires:
+    - name: project2-uaa 
   parameters:
     service: html5-apps-repo
     service-plan: app-runtime
