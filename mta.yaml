@@ -93,6 +93,7 @@ modules:
             protocol: 'https'
   requires:
   - name: project2-uaa
+  - name: project2-connectivity 
   - name: project2-html5-runtime
   - name: project2-destination-service
   provides:
@@ -116,6 +117,7 @@ modules:
   - name: project2-uaa
   - name: project2-db
   - name: project2-html5-runtime
+  - name: project2-connectivity    
   - name: project2-destination-service
   - name: project2-saas-registry  
   - name: app-api
@@ -200,3 +202,9 @@ resources:
   parameters:
     service: html5-apps-repo
     service-plan: app-runtime
+
+- name: project2-connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: connectivity
+    service-plan: lite

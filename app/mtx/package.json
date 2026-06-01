@@ -18,6 +18,7 @@
     "requires": {
       "html5-repo": true,
       "destinations": true,
+       "connectivity": true,
       "saas-registry": true
     }
   }
